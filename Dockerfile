@@ -5,8 +5,10 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update -qq
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -qq haproxy
 
 RUN mv /etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.cfg.original
+ADD run-haproxy.sh /usr/local/bin/
 ADD haproxy/haproxy.conf /etc/haproxy/haproxy.conf
-ADD supervisor/conf.d/haproxy.conf /etc/supervisor/conf.d/
+ADD rsyslog.d/ /etc/rsyslog.d/
+ADD supervisor/conf.d/ /etc/supervisor/conf.d/
 
 VOLUME ["/etc/haproxy/",]
 
