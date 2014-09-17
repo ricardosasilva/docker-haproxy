@@ -1,0 +1,12 @@
+[template]
+prefix=""
+keys = [
+  "services/log/rsyslog",
+  "services/web",
+]
+owner = "root"
+mode = "0644"
+src = "haproxy.tmpl"
+dest = "/etc/haproxy/haproxy.conf"
+check_cmd  = "/usr/sbin/haproxy -c -f {{ .src }}"
+reload_cmd = "/usr/bin/supervisorctl update"

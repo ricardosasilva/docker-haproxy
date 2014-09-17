@@ -3,10 +3,8 @@
 global
     maxconn         10000
     ulimit-n        65536
-    log 127.0.0.1    local1 notice
+    log {{ .services_log_rsyslog }}   local1 notice
     chroot /var/lib/haproxy
-#    stats socket /run/haproxy/admin.sock mode 660 level admin
-#    stats timeout 30s
     user haproxy
     group haproxy
 
@@ -46,13 +44,9 @@ backend nodes
     http-request set-header X-Forwarded-Port %[dst_port]
     http-request add-header X-Forwarded-Proto https if { ssl_fc }
     option httpchk HEAD / HTTP/1.1\r\nHost:localhost
+    {{range $server := .services_web}}
+        server {{ $server.Key }} {{ $server.Value }} check
+    {{end}}
     # Add servers here like:
     # server web01 127.0.0.1:9000 check
     # server web02 127.0.0.1:9001 check
-
-
-#listen stats *:1936
-#    stats enable
-#    stats uri /
-#    stats hide-version
-#    stats auth someuser:password
